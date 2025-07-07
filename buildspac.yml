@@ -1,0 +1,20 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      - echo "Installing frontend and backend via Docker builds..."
+      - sudo yum install nginx -y
+      - docker build -t frontend-image ./application-code/web-tier
+      - docker build -t backend-image ./application-code/app-tier
+  build:
+    commands:
+      - echo "Running Docker containers..."
+      - docker run -d --name frontend-container -p 81:80 frontend-image
+      - docker run -d --name backend-container -p 4000:4000 backend-image
+      - echo "Docker containers started successfully."
+artifacts:
+  files:
+    - appspec.yml
+    - scripts/*
+    - application-code/web-tier/Dockerfile
+    - application-code/app-tier/Dockerfile
